@@ -133,7 +133,7 @@
                     ""
                     SF-IMAGE "Image" 0
                     SF-DRAWABLE "Layer" 0
-                    SF-ADJUSTMENT "Number of pices" '(10 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER))
 
