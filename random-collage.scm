@@ -94,7 +94,12 @@
 
 
 ; Place pieces randomly on to the collage layer
-(define (randomly-place-pieces given-image collage-layer random-pieces))
+(define (randomly-place-pieces
+         given-image
+         collage-layer
+         num-pieces
+         min-source-piece-size
+         max-source-piece-size))
 
 
 (define (script-fu-random-collage
