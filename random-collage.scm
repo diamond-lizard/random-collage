@@ -97,6 +97,7 @@
 (define (randomly-place-pieces
          given-image
          collage-layer
+         source
          num-pieces
          min-source-piece-size
          max-source-piece-size))
@@ -105,6 +106,7 @@
 (define (script-fu-random-collage
          given-image
          given-layer
+         source
          num-pieces
          min-source-piece-size
          max-source-piece-size)
@@ -115,6 +117,7 @@
     (randomly-place-pieces
      given-image
      collage-layer
+     source
      num-pieces
      min-source-piece-size
      max-source-piece-size)
@@ -133,6 +136,7 @@
                     ""
                     SF-IMAGE "Image" 0
                     SF-DRAWABLE "Layer" 0
+                    SF-OPTION "Source" '("Active layer" "Clipboard")
                     SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER))
