@@ -4,7 +4,7 @@ This script will place randomly distorted portions of the active layer on to a n
 
 Based on user-configurable parameters, the script will change the portions it copies in various ways, such as rotating, growing, shrinking, and shearing them before placing them on to the collage layer.
 
-The active layer will be unaffected.
+The original layer will be unaffected.
 ** Installation
 *** 1
 Copy the "random-collage.scm" file to $XDG_CONFIG_HOME/GIMP/2.10/scripts or an alternate location (chosen via Preferences -> Folders -> Scripts)
