@@ -81,7 +81,7 @@
 (define (get-random-pieces
          given-image
          given-layer
-         num-source-pieces
+         num-pieces
          min-source-piece-size
          max-source-piece-size))
 
