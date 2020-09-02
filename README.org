@@ -14,15 +14,12 @@ Filters -> Script-Fu -> Refresh Scripts
 *** 1
 Run the script from: Filters -> Artistic -> Random Collage
 ** User-configurable parameters
-*** Number of source pieces
-How many pieces of the original layer will be sampled
+*** Number of pieces
+How many pieces of the active layer will be copied to the collage layer
 *** Min source piece size as percentage of source image
 The minimum size of each source piece, as a perentage of the source image.
 *** Max source piece size as percentage of source image
 The maximum size of each source piece, as a perentage of the source image.
-*** Number of destination pieces
-How many pieces will be placed on the collage layer
-Currently each of the source pieces will be placed on the collage layer in order, before repeating.
 *** Rotate?
 Whether to randomly rotate the pieces before placing them down.
 *** Resize?

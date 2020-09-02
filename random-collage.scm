@@ -109,16 +109,15 @@
 (define (script-fu-random-collage
          given-image
          given-layer
-         num-source-pieces
+         num-pieces
          min-source-piece-size
-         max-source-piece-size
-         num-destination-pieces)
+         max-source-piece-size)
   (gimp-image-undo-group-start given-image)
   (let* ((old-selection (car (gimp-selection-save given-image)))
          (random-pieces (get-random-pieces
                          given-image
                          given-layer
-                         num-source-pieces
+                         num-pieces
                          min-source-piece-size
                          max-source-piece-size))
          (collage-layer (create-collage-layer
@@ -139,10 +138,9 @@
                     ""
                     SF-IMAGE "Image" 0
                     SF-DRAWABLE "Layer" 0
-                    SF-ADJUSTMENT "Number of source pices" '(10 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Number of pices" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Max source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Number of destination pieces" '(10 1 100 1 10 0 SF-SPINNER))
+                    SF-ADJUSTMENT "Max source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER))
 
 
 (script-fu-menu-register "script-fu-random-collage" "<Image>/Filters/Artistic")
