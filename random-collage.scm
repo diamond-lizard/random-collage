@@ -77,15 +77,6 @@
     (list selection-lower-right-x selection-lower-right-y)))
 
 
-; Get random pieces from the active layer
-(define (get-random-pieces
-         given-image
-         given-layer
-         num-pieces
-         min-source-piece-size
-         max-source-piece-size))
-
-
 ; Return the upper-left-x and upper-left-y of the given selection
 ; or of the image, if nothing is selected
 (define (get-upper-left-bounds image)
@@ -114,15 +105,14 @@
          max-source-piece-size)
   (gimp-image-undo-group-start given-image)
   (let* ((old-selection (car (gimp-selection-save given-image)))
-         (random-pieces (get-random-pieces
-                         given-image
-                         given-layer
-                         num-pieces
-                         min-source-piece-size
-                         max-source-piece-size))
          (collage-layer (create-collage-layer
                             given-image)))
-    (randomly-place-pieces given-image collage-layer random-pieces)
+    (randomly-place-pieces
+     given-image
+     collage-layer
+     num-pieces
+     min-source-piece-size
+     max-source-piece-size)
     ; Restore old selection
     (gimp-image-select-item given-image CHANNEL-OP-REPLACE old-selection))
   (gimp-image-undo-group-end given-image)
