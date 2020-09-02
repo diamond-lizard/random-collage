@@ -1,0 +1,63 @@
+* Random Collage
+** Description
+This script will place randomly distorted portions of the active layer on to a new transparent layer (the collage layer).
+
+Based on user-configurable parameters, the script will change the portions it copies in various ways, such as rotating, growing, shrinking, and shearing them before placing them on to the collage layer.
+
+The original layer will be unaffected.
+** Installation
+*** 1
+Copy the "random-collage.scm" file to $XDG_CONFIG_HOME/GIMP/2.10/scripts or an alternate location (chosen via Preferences -> Folders -> Scripts)
+*** 2
+Filters -> Script-Fu -> Refresh Scripts
+** Use
+*** 1
+Run the script from: Filters -> Artistic -> Random Collage
+** User-configurable parameters
+*** Number of source pieces
+How many pieces of the original layer will be sampled
+*** Min source piece size as percentage of source image
+The minimum size of each source piece, as a perentage of the source image.
+*** Max source piece size as percentage of source image
+The maximum size of each source piece, as a perentage of the source image.
+*** Number of destination pieces
+How many pieces will be placed on the collage layer
+Currently each of the source pieces will be placed on the collage layer in order, before repeating.
+*** Rotate?
+Whether to randomly rotate the pieces before placing them down.
+*** Resize?
+Whether to randomly resize the pieces before placing them down.
+*** Resize min percentage
+Percentage of the original piece size that a piece can shrink.
+*** Resize max percentage
+Percentage of the original piece size that a piece can grow.
+*** When to draw borders
+**** Before = Draw a border around a piece before doing any other things to it (like rotating the piece).
+**** After  = Draw a border around a piece after doing all other things to it (like rotating the piece, etc).
+**** Random = Randomly chooses "Before" or "After" for each piece.
+**** Never  = Don't draw borders around any pieces.
+*** Randomize border size?
+Whether to randomly set a border size
+*** Border size in pixels
+When "Randomize border size?" is FALSE, this is the exact border size in pixels.
+When "Randomize border size?" is TRUE, this is the maximum border size in pixels.
+NOTE: The minimum border size will always be 0.
+** Testing:
+This script was only tested on GIMP 2.10.8 on amd64 Gentoo Linux
+** Issues and bugs
+Report bugs here:  https://github.com/diamond-lizard/random-collage/issues
+** LICENSE
+Copyright (C) 2020 - Sergey Goldgaber
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
