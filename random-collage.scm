@@ -108,10 +108,7 @@
          collage-layer
          source
          num-pieces
-         min-source-piece-height-as-percentage
-         min-source-piece-width-as-percentage
-         max-source-piece-height-as-percentage
-         max-source-piece-width-as-percentage)
+         source-piece-dimensions-as-percentage)
   (let* ((source-layer
           (cond
            ((equal? source 0) given-layer)
@@ -132,6 +129,12 @@
          max-source-piece-width-as-percentage)
   (gimp-image-undo-group-start given-image)
   (let* ((old-selection (car (gimp-selection-save given-image)))
+         ; Create an alist of dimensions, for convenience in passing around all over the place
+         (source-piece-dimensions-as-percentage
+          '((min-source-piece-height-as-percentage ,min-source-piece-height-as-percentage)
+            (min-source-piece-width-as-percentage ,min-source-piece-width-as-percentage)
+            (max-source-piece-height-as-percentage ,max-source-piece-height-as-percentage)
+            (max-source-piece-width-as-percentage ,max-source-piece-width-as-percentage)))
          (collage-layer (create-collage-layer
                             given-image)))
     (randomly-place-pieces
@@ -140,10 +143,7 @@
      collage-layer
      source
      num-pieces
-     min-source-piece-height-as-percentage
-     min-source-piece-width-as-percentage
-     max-source-piece-height-as-percentage
-     max-source-piece-width-as-percentage)
+     source-piece-dimensions-as-percentage)
     ; Restore old selection
     (gimp-image-select-item given-image CHANNEL-OP-REPLACE old-selection))
   (gimp-image-undo-group-end given-image)
