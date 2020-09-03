@@ -32,7 +32,7 @@
 
 
 (define (create-collage-layer given-image given-layer)
-  ; Clear the selection, so we can make the collage later transparent later
+  ; Clear the selection, so we can make the collage layer transparent later
   (gimp-selection-none given-image)
   (let* ((collage-layer-opacity 100)
          (collage-layer-mode LAYER-MODE-NORMAL)
