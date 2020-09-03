@@ -71,6 +71,8 @@
 
 ; Convert min and max source piece limits from percentages of source layer
 ; to absolute values in pixels based on the actual size of the source layer
+;
+; Note: These values are converted to integers, because we can't work with fractions of a pixel.
 (define (get-absolute-source-piece-limits
          given-image
          source-layer
