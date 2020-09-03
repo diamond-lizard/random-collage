@@ -100,6 +100,15 @@
     absolute-source-piece-limits))
 
 
+; Determine whether to use the active layer or the contents of the clipboard
+; as a source
+(define (get-source-layer source given-image given-layer)
+  (cond
+   ((equal? source 0) given-layer)
+   ((equal? source 1) (create-new-source-layer-from-clipboard
+                       given-image))))
+
+
 ; Pack source-piece-limits-as-percentages in to an alist, for ease of passing around later
 (define (get-source-piece-limits-as-percentages
          min-source-piece-height-as-percentage
@@ -121,10 +130,7 @@
          num-pieces
          source-piece-limits-as-percentages)
   (let* ((source-layer
-          (cond
-           ((equal? source 0) given-layer)
-           ((equal? source 1) (create-new-source-layer-from-clipboard
-                               given-image))))
+          (get-source-layer source given-image given-layer))
          (absolute-source-piece-limits
           (get-absolute-source-piece-limits
            given-image
