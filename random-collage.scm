@@ -48,6 +48,7 @@
          ; Collage layer parameters (used for layer insertion below)
          (collage-layer-parent    0)  ;  0 = Outside any group
          (collage-layer-position -1)) ; -1 = Above active layer
+    (gimp-layer-add-alpha collage-layer)
     ; Make the new collage layer visible
     (gimp-image-insert-layer
      given-image
