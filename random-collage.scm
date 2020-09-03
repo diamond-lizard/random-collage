@@ -69,31 +69,31 @@
     source-layer))
 
 
-; Convert min and max source piece dimenensions from percentages of source layer
+; Convert min and max source piece limits from percentages of source layer
 ; to absolute values in pixels based on the actual size of the source layer
-(define (get-absolute-source-piece-dimensions
+(define (get-absolute-source-piece-limits
          given-image
          source-layer
-         source-piece-dimensions-as-percentage)
+         source-piece-limits-as-percentage)
   (let* ((min-source-piece-height-as-percentage
-          (cadr (assoc 'min-source-piece-height-as-percentage source-piece-dimensions-as-percentage)))
+          (cadr (assoc 'min-source-piece-height-as-percentage source-piece-limits-as-percentage)))
          (min-source-piece-width-as-percentage
-          (cadr (assoc 'min-source-piece-width-as-percentage  source-piece-dimensions-as-percentage)))
+          (cadr (assoc 'min-source-piece-width-as-percentage  source-piece-limits-as-percentage)))
          (max-source-piece-height-as-percentage
-          (cadr (assoc 'max-source-piece-height-as-percentage source-piece-dimensions-as-percentage)))
+          (cadr (assoc 'max-source-piece-height-as-percentage source-piece-limits-as-percentage)))
          (max-source-piece-width-as-percentage
-          (cadr (assoc 'max-source-piece-width-as-percentage  source-piece-dimensions-as-percentage)))
+          (cadr (assoc 'max-source-piece-width-as-percentage  source-piece-limits-as-percentage)))
          (source-layer-height (car (gimp-drawable-height source-layer)))
          (source-layer-width  (car (gimp-drawable-width  source-layer)))
          (min-source-piece-height (trunc (round (* source-layer-height (/ min-source-piece-height-as-percentage 100)))))
          (min-source-piece-width  (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
          (max-source-piece-height (trunc (round (* source-layer-height (/ min-source-piece-height-as-percentage 100)))))
          (max-source-piece-width  (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
-         (absolute-source-piece-dimensions `((min-source-piece-height ,min-source-piece-height)
-                                             (min-source-piece-width  ,min-source-piece-width)
-                                             (max-source-piece-height ,max-source-piece-height)
-                                             (max-source-piece-width  ,max-source-piece-width))))
-    absolute-source-piece-dimensions))
+         (absolute-source-piece-limits `((min-source-piece-height ,min-source-piece-height)
+                                         (min-source-piece-width  ,min-source-piece-width)
+                                         (max-source-piece-height ,max-source-piece-height)
+                                         (max-source-piece-width  ,max-source-piece-width))))
+    absolute-source-piece-limits))
 
 
 
@@ -136,17 +136,17 @@
          collage-layer
          source
          num-pieces
-         source-piece-dimensions-as-percentage)
+         source-piece-limits-as-percentage)
   (let* ((source-layer
           (cond
            ((equal? source 0) given-layer)
            ((equal? source 1) (create-new-source-layer-from-clipboard
                                given-image))))
-         (absolute-source-piece-dimensions
-          (get-absolute-source-piece-dimensions
+         (absolute-source-piece-limits
+          (get-absolute-source-piece-limits
            given-image
            source-layer
-           source-piece-dimensions-as-percentage)))))
+           source-piece-limits-as-percentage)))))
 
 
 ; Main entry point in to the script
@@ -162,8 +162,8 @@
          max-source-piece-width-as-percentage)
   (gimp-image-undo-group-start given-image)
   (let* ((old-selection (car (gimp-selection-save given-image)))
-         ; Create an alist of dimensions, for convenience in passing around all over the place
-         (source-piece-dimensions-as-percentage
+         ; Create an alist of limits, for convenience in passing around all over the place
+         (source-piece-limits-as-percentage
           `((min-source-piece-height-as-percentage ,min-source-piece-height-as-percentage)
             (min-source-piece-width-as-percentage ,min-source-piece-width-as-percentage)
             (max-source-piece-height-as-percentage ,max-source-piece-height-as-percentage)
@@ -176,7 +176,7 @@
      collage-layer
      source
      num-pieces
-     source-piece-dimensions-as-percentage)
+     source-piece-limits-as-percentage)
     ; Restore old selection
     (gimp-image-select-item given-image CHANNEL-OP-REPLACE old-selection))
   (gimp-image-undo-group-end given-image)
