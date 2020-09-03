@@ -61,6 +61,15 @@
     (gimp-drawable-edit-clear collage-layer)))
 
 
+(define (create-new-source-layer-from-clipboard given-image)
+  (let* ((active-drawable (car (gimp-image-get-active-drawable given-image)))
+         (floating-selection (car (gimp-edit-paste active-drawable FALSE)))
+         (ignored (gimp-floating-sel-to-layer floating-selection))
+         (source-layer (car (gimp-image-active-drawable given-image))))
+    (gimp-item-set-name source-layer "Random Collage source layer")
+    source-layer))
+
+
 ; Return the lower-right-x and lower-right-y of the given selection
 ; or of the image, if nothing is selected
 (define (get-lower-right-bounds image)
@@ -96,31 +105,46 @@
 ; Place pieces randomly on to the collage layer
 (define (randomly-place-pieces
          given-image
+         given-layer
          collage-layer
          source
          num-pieces
-         min-source-piece-size
-         max-source-piece-size))
+         min-source-piece-height-as-percentage
+         min-source-piece-width-as-percentage
+         max-source-piece-height-as-percentage
+         max-source-piece-width-as-percentage)
+  (let* ((source-layer
+          (cond
+           ((equal? source 0) given-layer)
+           ((equal? source 1) (create-new-source-layer-from-clipboard
+                               given-image)))))))
 
 
+; Main entry point in to the script
+; It is registered using script-fu-register and script-fu-menu-register below
 (define (script-fu-random-collage
          given-image
          given-layer
          source
          num-pieces
-         min-source-piece-size
-         max-source-piece-size)
+         min-source-piece-height-as-percentage
+         min-source-piece-width-as-percentage
+         max-source-piece-height-as-percentage
+         max-source-piece-width-as-percentage)
   (gimp-image-undo-group-start given-image)
   (let* ((old-selection (car (gimp-selection-save given-image)))
          (collage-layer (create-collage-layer
                             given-image)))
     (randomly-place-pieces
      given-image
+     given-layer
      collage-layer
      source
      num-pieces
-     min-source-piece-size
-     max-source-piece-size)
+     min-source-piece-height-as-percentage
+     min-source-piece-width-as-percentage
+     max-source-piece-height-as-percentage
+     max-source-piece-width-as-percentage)
     ; Restore old selection
     (gimp-image-select-item given-image CHANNEL-OP-REPLACE old-selection))
   (gimp-image-undo-group-end given-image)
@@ -138,8 +162,10 @@
                     SF-DRAWABLE "Layer" 0
                     SF-OPTION "Source" '("Active layer" "Clipboard")
                     SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Min source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Max source piece size as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER))
+                    SF-ADJUSTMENT "Min source piece height as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Min source piece width as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Max source piece height as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Max source piece width as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER))
 
 
 (script-fu-menu-register "script-fu-random-collage" "<Image>/Filters/Artistic")

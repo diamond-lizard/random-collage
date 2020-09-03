@@ -16,10 +16,14 @@ Run the script from: Filters -> Artistic -> Random Collage
 ** User-configurable parameters
 *** Number of pieces
 How many pieces of the active layer will be copied to the collage layer
-*** Min source piece size as percentage of source image
-The minimum size of each source piece, as a perentage of the source image.
-*** Max source piece size as percentage of source image
-The maximum size of each source piece, as a perentage of the source image.
+*** Min source piece height as percentage of source image
+The minimum height of each source piece, as a perentage of the source image.
+*** Min source piece width as percentage of source image
+The minimum width of each source piece, as a perentage of the source image.
+*** Max source piece height as percentage of source image
+The maximum height of each source piece, as a perentage of the source image.
+*** Max source piece width as percentage of source image
+The maximum width of each source piece, as a perentage of the source image.
 *** Rotate?
 Whether to randomly rotate the pieces before placing them down.
 *** Resize?
@@ -41,8 +45,26 @@ When "Randomize border size?" is TRUE, this is the maximum border size in pixels
 NOTE: The minimum border size will always be 0.
 ** Testing:
 This script was only tested on GIMP 2.10.8 on amd64 Gentoo Linux
+** Unfixable limitations
+*** The script can't use an existing layer other than the active layer as the source or collage layer.
+This is because ScriptFu does not allow the script to prompt the user with a choice of existing layer names
+*** Unused options can not be hidden or grayed-out.
+This is a limitation of the ScriptFu GUI.
+*** Options can not be organized in to tabs.
+This is a limitation of the ScriptFu GUI.
+*** There no live preview.
+ScriptFu just does not allow scripts to have live preview.
 ** Issues and bugs
 Report bugs here:  https://github.com/diamond-lizard/random-collage/issues
+** TODO
+*** TODO use the clipboard, rather than the active layer, as the piece source
+This is done so that the source need not be the active layer, since the
+script will automatically create a new collage layer that will match the size of
+the active layer.  Alternatively, the user could be prompted for a layer size.
+
+Maybe checkboxes and options could be present for each:
+**** clipboard or active layer as source
+**** new layer size matches active layer or uses a user-specified size
 ** LICENSE
 Copyright (C) 2020 - Sergey Goldgaber
 
