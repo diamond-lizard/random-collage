@@ -69,6 +69,32 @@
     source-layer))
 
 
+(define (get-absolute-source-piece-dimensions
+         given-image
+         source-layer
+         source-piece-dimensions-as-percentage)
+  (let* ((min-source-piece-height-as-percentage
+          (cadr (assoc 'min-source-piece-height-as-percentage source-piece-dimensions-as-percentage)))
+         (min-source-piece-width-as-percentage
+          (cadr (assoc 'min-source-piece-width-as-percentage  source-piece-dimensions-as-percentage)))
+         (max-source-piece-height-as-percentage
+          (cadr (assoc 'max-source-piece-height-as-percentage source-piece-dimensions-as-percentage)))
+         (max-source-piece-width-as-percentage
+          (cadr (assoc 'max-source-piece-width-as-percentage  source-piece-dimensions-as-percentage)))
+         (source-layer-height (car (gimp-drawable-height source-layer)))
+         (source-layer-width  (car (gimp-drawable-width  source-layer)))
+         (min-source-piece-height (* source-layer-height (/ min-source-piece-height-as-percentage 100)))
+         (min-source-piece-width  (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))
+         (max-source-piece-height (* source-layer-height (/ min-source-piece-height-as-percentage 100)))
+         (max-source-piece-width  (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))
+         (absolute-source-piece-dimensions `((min-source-piece-height ,min-source-piece-height)
+                                             (min-source-piece-width  ,min-source-piece-width)
+                                             (max-source-piece-height ,max-source-piece-height)
+                                             (max-source-piece-width  ,max-source-piece-width))))
+    absolute-source-piece-dimensions))
+
+
+
 ; Return the lower-right-x and lower-right-y of the given selection
 ; or of the image, if nothing is selected
 (define (get-lower-right-bounds image)
@@ -113,7 +139,12 @@
           (cond
            ((equal? source 0) given-layer)
            ((equal? source 1) (create-new-source-layer-from-clipboard
-                               given-image)))))))
+                               given-image))))
+         (absolute-source-piece-dimensions
+          (get-absolute-source-piece-dimensions
+           given-image
+           source-layer
+           source-piece-dimensions-as-percentage)))))
 
 
 ; Main entry point in to the script
@@ -131,7 +162,7 @@
   (let* ((old-selection (car (gimp-selection-save given-image)))
          ; Create an alist of dimensions, for convenience in passing around all over the place
          (source-piece-dimensions-as-percentage
-          '((min-source-piece-height-as-percentage ,min-source-piece-height-as-percentage)
+          `((min-source-piece-height-as-percentage ,min-source-piece-height-as-percentage)
             (min-source-piece-width-as-percentage ,min-source-piece-width-as-percentage)
             (max-source-piece-height-as-percentage ,max-source-piece-height-as-percentage)
             (max-source-piece-width-as-percentage ,max-source-piece-width-as-percentage)))
