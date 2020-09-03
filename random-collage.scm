@@ -31,19 +31,16 @@
 ; ===========================================================================
 
 
-(define (create-collage-layer given-image)
+(define (create-collage-layer given-image given-layer)
   ; Clear the selection, so we can make the collage later transparent later
   (gimp-selection-none given-image)
-  (let* ((selection-lower-right-bounds (get-lower-right-bounds given-image))
-         (selection-lower-right-x (car selection-lower-right-bounds))
-         (selection-lower-right-y (cadr selection-lower-right-bounds))
-         (collage-layer-opacity 100)
+  (let* ((collage-layer-opacity 100)
          (collage-layer-mode LAYER-MODE-NORMAL)
          ; Create a new collage layer
          (collage-layer (car (gimp-layer-new
                                  given-image
-                                 selection-lower-right-x
-                                 selection-lower-right-y
+                                 (car (gimp-drawable-width given-layer))
+                                 (car (gimp-drawable-height given-layer))
                                  RGB-IMAGE
                                  "Random Collage"
                                  collage-layer-opacity
@@ -102,39 +99,6 @@
     absolute-source-piece-limits))
 
 
-
-; Return the lower-right-x and lower-right-y of the given selection
-; or of the image, if nothing is selected
-(define (get-lower-right-bounds image)
-  (let* ((selection-bounds (gimp-selection-bounds image))
-         (selection-non-empty (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-upper-left-x (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-upper-left-y (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-lower-right-x (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-lower-right-y (head selection-bounds)))
-    (list selection-lower-right-x selection-lower-right-y)))
-
-
-; Return the upper-left-x and upper-left-y of the given selection
-; or of the image, if nothing is selected
-(define (get-upper-left-bounds image)
-  (let* ((selection-bounds (gimp-selection-bounds image))
-         (selection-non-empty (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-upper-left-x (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-upper-left-y (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-lower-right-x (head selection-bounds))
-         (selection-bounds (tail selection-bounds))
-         (selection-lower-right-y (head selection-bounds)))
-    (list selection-upper-left-x selection-upper-left-y)))
-
-
 ; Place pieces randomly on to the collage layer
 (define (randomly-place-pieces
          given-image
@@ -174,8 +138,7 @@
             (min-source-piece-width-as-percentage ,min-source-piece-width-as-percentage)
             (max-source-piece-height-as-percentage ,max-source-piece-height-as-percentage)
             (max-source-piece-width-as-percentage ,max-source-piece-width-as-percentage)))
-         (collage-layer (create-collage-layer
-                            given-image)))
+         (collage-layer (create-collage-layer given-image given-layer)))
     (randomly-place-pieces
      given-image
      given-layer
