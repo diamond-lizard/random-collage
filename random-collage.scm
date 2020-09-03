@@ -69,6 +69,8 @@
     source-layer))
 
 
+; Convert min and max source piece dimenensions from percentages of source layer
+; to absolute values in pixels based on the actual size of the source layer
 (define (get-absolute-source-piece-dimensions
          given-image
          source-layer
