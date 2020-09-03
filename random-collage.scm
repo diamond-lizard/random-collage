@@ -87,10 +87,14 @@
           (cadr (assoc 'max-source-piece-width-as-percentage  source-piece-limits-as-percentage)))
          (source-layer-height (car (gimp-drawable-height source-layer)))
          (source-layer-width  (car (gimp-drawable-width  source-layer)))
-         (min-source-piece-height (trunc (round (* source-layer-height (/ min-source-piece-height-as-percentage 100)))))
-         (min-source-piece-width  (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
-         (max-source-piece-height (trunc (round (* source-layer-height (/ min-source-piece-height-as-percentage 100)))))
-         (max-source-piece-width  (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
+         (min-source-piece-height
+          (trunc (round (* source-layer-height (/ min-source-piece-height-as-percentage 100)))))
+         (min-source-piece-width
+          (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
+         (max-source-piece-height
+          (trunc (round (* source-layer-height (/ min-source-piece-height-as-percentage 100)))))
+         (max-source-piece-width
+          (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
          (absolute-source-piece-limits `((min-source-piece-height ,min-source-piece-height)
                                          (min-source-piece-width  ,min-source-piece-width)
                                          (max-source-piece-height ,max-source-piece-height)
