@@ -100,6 +100,18 @@
     absolute-source-piece-limits))
 
 
+; Pack source-piece-limits-as-percentages in to an alist, for ease of passing around later
+(define (get-source-piece-limits-as-percentages
+         min-source-piece-height-as-percentage
+         min-source-piece-width-as-percentage
+         max-source-piece-height-as-percentage
+         max-source-piece-width-as-percentage)
+  `((min-source-piece-height-as-percentage ,min-source-piece-height-as-percentage)
+    (min-source-piece-width-as-percentage ,min-source-piece-width-as-percentage)
+    (max-source-piece-height-as-percentage ,max-source-piece-height-as-percentage)
+    (max-source-piece-width-as-percentage ,max-source-piece-width-as-percentage)))
+
+
 ; Place pieces randomly on to the collage layer
 (define (randomly-place-pieces
          given-image
@@ -135,10 +147,11 @@
   (let* ((old-selection (car (gimp-selection-save given-image)))
          ; Create an alist of limits, for convenience in passing around all over the place
          (source-piece-limits-as-percentages
-          `((min-source-piece-height-as-percentage ,min-source-piece-height-as-percentage)
-            (min-source-piece-width-as-percentage ,min-source-piece-width-as-percentage)
-            (max-source-piece-height-as-percentage ,max-source-piece-height-as-percentage)
-            (max-source-piece-width-as-percentage ,max-source-piece-width-as-percentage)))
+          (get-source-piece-limits-as-percentages
+           min-source-piece-height-as-percentage
+           min-source-piece-width-as-percentage
+           max-source-piece-height-as-percentage
+           max-source-piece-width-as-percentage))
          (collage-layer (create-collage-layer given-image given-layer)))
     (randomly-place-pieces
      given-image
