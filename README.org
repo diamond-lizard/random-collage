@@ -56,15 +56,6 @@ This is a limitation of the ScriptFu GUI.
 ScriptFu just does not allow scripts to have live preview.
 ** Issues and bugs
 Report bugs here:  https://github.com/diamond-lizard/random-collage/issues
-** TODO
-*** TODO use the clipboard, rather than the active layer, as the piece source
-This is done so that the source need not be the active layer, since the
-script will automatically create a new collage layer that will match the size of
-the active layer.  Alternatively, the user could be prompted for a layer size.
-
-Maybe checkboxes and options could be present for each:
-**** clipboard or active layer as source
-**** new layer size matches active layer or uses a user-specified size
 ** LICENSE
 Copyright (C) 2020 - Sergey Goldgaber
 
