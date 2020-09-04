@@ -23,13 +23,13 @@ This is due to a limitation of ScriptFu, which does not let the script do sanity
 *** Number of pieces
 How many pieces of the active layer will be copied to the collage layer
 *** Min source piece height %
-The minimum height of each source piece, as a perentage of the source image.
+The minimum height of each source piece, as a perentage of the source layer.
 *** Min source piece width %
-The minimum width of each source piece, as a perentage of the source image.
+The minimum width of each source piece, as a perentage of the source layer.
 *** Max source piece height %
-The maximum height of each source piece, as a perentage of the source image.
+The maximum height of each source piece, as a perentage of the source layer.
 *** Max source piece width %
-The maximum width of each source piece, as a perentage of the source image.
+The maximum width of each source piece, as a perentage of the source layer.
 *** Rotate?
 Whether to randomly rotate the pieces before placing them down.
 *** Resize?
