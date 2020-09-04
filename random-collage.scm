@@ -184,7 +184,17 @@
      (#t "unknown type"))))
 
 
-(define (randomly-place-piece image layer piece rotate resize min-resize max-resize)
+(define (randomly-place-piece
+         image
+         layer
+         piece
+         rotate
+         resize
+         min-resize
+         max-resize
+         shear
+         min-shear
+         max-shear)
   (let* ((random-x-on-layer
           (choose-random-x-on-layer layer))
          (random-y-on-layer
@@ -258,6 +268,17 @@
            TRUE
            center-x
            center-y)))
+    (if shear
+        (let* ((shear-type
+                (- (random 2) 1))
+               (difference
+                (+ 1 (- max-shear min-shear)))
+               (magnitude
+                (+ (- min-shear 1) (random difference))))
+          (gimp-item-transform-shear
+           active-drawable
+           shear-type
+           magnitude)))
     (gimp-floating-sel-anchor active-drawable)))
 
 
@@ -275,7 +296,10 @@
          rotate
          resize
          min-resize
-         max-resize)
+         max-resize
+         shear
+         min-shear
+         max-shear)
   (let* ((absolute-source-piece-limits
           (get-absolute-source-piece-limits
            given-image
@@ -290,7 +314,10 @@
      rotate
      resize
      min-resize
-     max-resize)))
+     max-resize
+     shear
+     min-shear
+     max-shear)))
 
 
 ; The real work of getting and placing pieces is done here
@@ -303,7 +330,10 @@
          rotate
          resize
          min-resize
-         max-resize)
+         max-resize
+         shear
+         min-shear
+         max-shear)
   (let loop ((i 0))
     (if (< i num-pieces)
         (let ((random-piece-copied-from-source
@@ -318,7 +348,10 @@
            rotate
            resize
            min-resize
-           max-resize)
+           max-resize
+           shear
+           min-shear
+           max-shear)
           (loop (+ i 1))))))
 
 
@@ -335,7 +368,10 @@
          rotate
          resize
          min-resize
-         max-resize)
+         max-resize
+         shear
+         min-shear
+         max-shear)
   ; Sanity check the heights and widths chosen by the user
   (cond
    ((<= max-source-piece-height-as-percentage min-source-piece-height-as-percentage)
@@ -368,7 +404,10 @@
      rotate
      resize
      min-resize
-     max-resize)
+     max-resize
+     shear
+     min-shear
+     max-shear)
     ; Restore old selection
     (gimp-image-select-item given-image CHANNEL-OP-REPLACE old-selection))
   (gimp-image-undo-group-end given-image)
@@ -391,8 +430,11 @@
                     SF-ADJUSTMENT "Max source piece width % (Must be > than Min height %)" '(20 1 100 1 10 0 SF-SPINNER)
                     SF-TOGGLE "Rotate?" TRUE
                     SF-TOGGLE "Resize?" TRUE
-                    SF-ADJUSTMENT "Min resize" '(0.1 0.1 2 0.1 0.5 1 SF-SPINNER)
-                    SF-ADJUSTMENT "Max resize" '(2 0.1 2 0.1 0.5 1 SF-SPINNER))
+                    SF-ADJUSTMENT "Min resize (Must be < Max resize)" '(0.1 0.1 2 0.1 0.5 1 SF-SPINNER)
+                    SF-ADJUSTMENT "Max resize (Must be > Min resize)" '(2 0.1 2 0.1 0.5 1 SF-SPINNER)
+                    SF-TOGGLE "Shear?" TRUE
+                    SF-ADJUSTMENT "Min shear (Must be < Max shear)" '(1 1 1000 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Max shear (Must be > Min shear)" '(200 1 1000 1 10 0 SF-SPINNER))
 
 
 (script-fu-menu-register "script-fu-random-collage" "<Image>/Filters/Artistic")
