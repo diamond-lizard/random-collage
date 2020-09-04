@@ -11,8 +11,10 @@ Copy the "random-collage.scm" file to $XDG_CONFIG_HOME/GIMP/2.10/scripts or an a
 *** 2
 Filters -> Script-Fu -> Refresh Scripts
 ** Use
-*** 1
-Run the script from: Filters -> Artistic -> Random Collage
+*** 1 - Select the layer you want the script to copy from.
+*** 2 - Run the script from: Filters -> Artistic -> Random Collage
+*** 3 - Set the script's parameters to your taste in the dialog that appears.
+*** 4 - Click "OK" to generate the random collage.
 ** User-configurable parameters
 NOTE:  It is up to YOU to make sure the minimum amounts are smaller than the maximum amounts!
 This is due to a limitation of ScriptFu, which does not let the script writer do sanity checks on user inputs before the script dialog closes.
