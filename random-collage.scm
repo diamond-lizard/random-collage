@@ -420,7 +420,7 @@
                     "Sergey Goldgaber"
                     "Copyright 2020, Sergey Goldgaber"
                     "Sep 1, 2020"
-                    "RGB"
+                    "RGB, RGBA"
                     SF-IMAGE "Image" 0
                     SF-DRAWABLE "Layer" 0
                     SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
