@@ -202,7 +202,7 @@
      (#t "unknown type"))))
 
 
-(define (randomly-place-piece image layer piece rotate)
+(define (randomly-place-piece image layer piece rotate resize min-resize max-resize)
   (let* ((random-x-on-layer
           (choose-random-x-on-layer layer))
          (random-y-on-layer
@@ -230,14 +230,52 @@
          (center-x
           (trunc (round (/ piece-width 2))))
          (center-y
-          (trunc (round (/ piece-height 2)))))
+          (trunc (round (/ piece-height 2))))
+         (active-drawable
+          (if resize
+                                        ; We need to scale up the min and max resize values
+                                        ; to integers, beacuse that's what the random function can generate.
+                                        ; After the random function we can convert back to floats.
+                                        ;
+                                        ; NOTE: The scaling is a bit of a hack, as we hardcode the scale amount here
+                                        ;       instead of determining it dynamically.
+              (let* ((scaled-min-resize (* 1000 min-resize))
+                     (scaled-max-resize (* 1000 max-resize))
+                     (scaled-difference
+                      (+ 1 (- scaled-max-resize scaled-min-resize)))
+                     (random-scale-amount
+                      (/
+                       (+ (- scaled-min-resize 1)
+                          (random scaled-difference))
+                       1000))
+                     (angle 0))
+                (car (gimp-item-transform-2d
+                      active-drawable
+                      center-x
+                      center-y
+                      random-scale-amount
+                      random-scale-amount
+                      angle
+                      center-x
+                      center-y)))
+              active-drawable)))
     (if rotate
-        (gimp-item-transform-rotate
-         active-drawable
-         (random 359)
-         TRUE
-         center-x
-         center-y))
+        (let* ((piece-height
+                (car (gimp-drawable-height active-drawable)))
+               (piece-width
+                (car (gimp-drawable-width active-drawable)))
+               (center-x
+                (trunc (round (/ piece-width 2))))
+               (center-y
+                (trunc (round (/ piece-height 2))))
+               (max-rotation-angle 359)
+               (rotation-angle (random max-rotation-angle)))
+          (gimp-item-transform-rotate
+           active-drawable
+           rotation-angle
+           TRUE
+           center-x
+           center-y)))
     (gimp-floating-sel-anchor active-drawable)))
 
 
@@ -252,7 +290,10 @@
          source
          num-pieces
          source-piece-limits-as-percentages
-         rotate)
+         rotate
+         resize
+         min-resize
+         max-resize)
   (let* ((source-layer
           (get-source-layer source given-image given-layer))
          (absolute-source-piece-limits
@@ -266,7 +307,10 @@
      source-layer
      num-pieces
      absolute-source-piece-limits
-     rotate)))
+     rotate
+     resize
+     min-resize
+     max-resize)))
 
 
 ; The real work of getting and placing pieces is done here
@@ -276,7 +320,10 @@
          source-layer
          num-pieces
          absolute-source-piece-limits
-         rotate)
+         rotate
+         resize
+         min-resize
+         max-resize)
   (let loop ((i 0))
     (if (< i num-pieces)
         (let ((random-piece-copied-from-source
@@ -288,7 +335,10 @@
            given-image
            collage-layer
            random-piece-copied-from-source
-           rotate)
+           rotate
+           resize
+           min-resize
+           max-resize)
           (loop (+ i 1))))))
 
 
@@ -303,7 +353,10 @@
          min-source-piece-width-as-percentage
          max-source-piece-height-as-percentage
          max-source-piece-width-as-percentage
-         rotate)
+         rotate
+         resize
+         min-resize
+         max-resize)
   ; Sanity check the heights and widths chosen by the user
   (cond
    ((<= max-source-piece-height-as-percentage min-source-piece-height-as-percentage)
@@ -311,6 +364,10 @@
     (quit))
    ((<= max-source-piece-width-as-percentage min-source-piece-width-as-percentage)
     (gimp-message "Error: Max source piece width is not greater than min source piece width.")
+    (quit)))
+  (cond
+   ((<= max-resize min-resize)
+    (gimp-message "Error: Max resize is not greater than min resize.")
     (quit)))
   (gimp-image-undo-group-start given-image)
   (let* ((old-selection (car (gimp-selection-save given-image)))
@@ -329,7 +386,10 @@
      source
      num-pieces
      source-piece-limits-as-percentages
-     rotate)
+     rotate
+     resize
+     min-resize
+     max-resize)
     ; Restore old selection
     (gimp-image-select-item given-image CHANNEL-OP-REPLACE old-selection))
   (gimp-image-undo-group-end given-image)
@@ -351,7 +411,10 @@
                     SF-ADJUSTMENT "Min source piece width as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece height as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece width as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER)
-                    SF-TOGGLE "Rotate?" TRUE)
+                    SF-TOGGLE "Rotate?" TRUE
+                    SF-TOGGLE "Resize?" TRUE
+                    SF-ADJUSTMENT "Min resize as percentage of piece" '(0.1 0.1 2 0.1 0.5 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Max resize as percentage of piece" '(2 0.1 2 0.1 0.5 0 SF-SPINNER))
 
 
 (script-fu-menu-register "script-fu-random-collage" "<Image>/Filters/Artistic")
