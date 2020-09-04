@@ -202,7 +202,7 @@
      (#t "unknown type"))))
 
 
-(define (randomly-place-piece image layer piece)
+(define (randomly-place-piece image layer piece rotate)
   (let* ((random-x-on-layer
           (choose-random-x-on-layer layer))
          (random-y-on-layer
@@ -226,7 +226,18 @@
            FALSE))
          (active-drawable
           (car
-           (gimp-image-get-active-drawable image))))
+           (gimp-image-get-active-drawable image)))
+         (center-x
+          (trunc (round (/ piece-width 2))))
+         (center-y
+          (trunc (round (/ piece-height 2)))))
+    (if rotate
+        (gimp-item-transform-rotate
+         active-drawable
+         (random 359)
+         TRUE
+         center-x
+         center-y))
     (gimp-floating-sel-anchor active-drawable)))
 
 
@@ -240,7 +251,8 @@
          collage-layer
          source
          num-pieces
-         source-piece-limits-as-percentages)
+         source-piece-limits-as-percentages
+         rotate)
   (let* ((source-layer
           (get-source-layer source given-image given-layer))
          (absolute-source-piece-limits
@@ -253,7 +265,8 @@
      collage-layer
      source-layer
      num-pieces
-     absolute-source-piece-limits)))
+     absolute-source-piece-limits
+     rotate)))
 
 
 ; The real work of getting and placing pieces is done here
@@ -262,7 +275,8 @@
          collage-layer
          source-layer
          num-pieces
-         absolute-source-piece-limits)
+         absolute-source-piece-limits
+         rotate)
   (let loop ((i 0))
     (if (< i num-pieces)
         (let ((random-piece-copied-from-source
@@ -273,7 +287,8 @@
           (randomly-place-piece
            given-image
            collage-layer
-           random-piece-copied-from-source)
+           random-piece-copied-from-source
+           rotate)
           (loop (+ i 1))))))
 
 
@@ -287,7 +302,8 @@
          min-source-piece-height-as-percentage
          min-source-piece-width-as-percentage
          max-source-piece-height-as-percentage
-         max-source-piece-width-as-percentage)
+         max-source-piece-width-as-percentage
+         rotate)
   ; Sanity check the heights and widths chosen by the user
   (cond
    ((<= max-source-piece-height-as-percentage min-source-piece-height-as-percentage)
@@ -312,7 +328,8 @@
      collage-layer
      source
      num-pieces
-     source-piece-limits-as-percentages)
+     source-piece-limits-as-percentages
+     rotate)
     ; Restore old selection
     (gimp-image-select-item given-image CHANNEL-OP-REPLACE old-selection))
   (gimp-image-undo-group-end given-image)
@@ -333,7 +350,8 @@
                     SF-ADJUSTMENT "Min source piece height as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece width as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece height as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Max source piece width as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER))
+                    SF-ADJUSTMENT "Max source piece width as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER)
+                    SF-TOGGLE "Rotate?" FALSE)
 
 
 (script-fu-menu-register "script-fu-random-collage" "<Image>/Filters/Artistic")
