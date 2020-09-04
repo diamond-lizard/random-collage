@@ -32,6 +32,14 @@ Whether to randomly resize the pieces before placing them down.
 Percentage of the original piece size that a piece can shrink.
 *** Resize max percentage
 Percentage of the original piece size that a piece can grow.
+*** Resize?
+Whether to randomly shear the pieces before placing them down.
+*** Min shear
+Smallest amount a piece can be sheared
+*** Max shear
+Largest amount a piece can be sheared
+** TODO
+Add the following parameters:
 *** When to draw borders
 **** Before = Draw a border around a piece before doing any other things to it (like rotating the piece).
 **** After  = Draw a border around a piece after doing all other things to it (like rotating the piece, etc).
