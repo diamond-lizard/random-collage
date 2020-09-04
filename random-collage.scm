@@ -85,7 +85,7 @@
          (ignored
           (gimp-image-select-rectangle
            given-image
-           CHANNEL-OP-SUBTRACT
+           CHANNEL-OP-REPLACE
            random-x-on-source-layer
            random-y-on-source-layer
            random-piece-width
