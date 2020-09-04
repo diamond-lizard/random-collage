@@ -16,6 +16,7 @@ Filters -> Script-Fu -> Refresh Scripts
 *** 3 - Run the script from: Filters -> Artistic -> Random Collage
 *** 4 - Set the script's parameters to your taste in the dialog that appears.
 *** 5 - Click "OK" to generate the random collage.
+Note: This may take a while.  The more pieces and transformations, the longer it takes.  Have patience.
 ** User-configurable parameters
 NOTE:  It is up to YOU to make sure the minimum amounts are smaller than the maximum amounts!
 This is due to a limitation of ScriptFu, which does not let the script writer do sanity checks on user inputs before the script dialog closes.
