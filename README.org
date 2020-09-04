@@ -14,6 +14,8 @@ Filters -> Script-Fu -> Refresh Scripts
 *** 1
 Run the script from: Filters -> Artistic -> Random Collage
 ** User-configurable parameters
+NOTE:  It is up to YOU to make sure the minimum amounts are smaller than the maximum amounts!
+This is due to a limitation of ScriptFu, which does not let the script writer do sanity checks on user inputs before the script dialog closes.
 *** Number of pieces
 How many pieces of the active layer will be copied to the collage layer
 *** Min source piece height as percentage of source image
