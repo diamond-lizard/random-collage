@@ -391,8 +391,8 @@
                     SF-ADJUSTMENT "Max source piece width as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER)
                     SF-TOGGLE "Rotate?" TRUE
                     SF-TOGGLE "Resize?" TRUE
-                    SF-ADJUSTMENT "Min resize as percentage of piece" '(0.1 0.1 2 0.1 0.5 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Max resize as percentage of piece" '(2 0.1 2 0.1 0.5 0 SF-SPINNER))
+                    SF-ADJUSTMENT "Min resize as percentage of piece" '(0.1 0.1 2 0.1 0.5 1 SF-SPINNER)
+                    SF-ADJUSTMENT "Max resize as percentage of piece" '(2 0.1 2 0.1 0.5 1 SF-SPINNER))
 
 
 (script-fu-menu-register "script-fu-random-collage" "<Image>/Filters/Artistic")
