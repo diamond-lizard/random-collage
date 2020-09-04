@@ -31,6 +31,72 @@
 ; ===========================================================================
 
 
+(define (choose-random-x-on-layer given-layer)
+  (let* ((width (car (gimp-drawable-width given-layer)))
+         (random-x (random width)))
+    random-x))
+
+
+(define (choose-random-y-on-layer given-layer)
+  (let* ((height (car (gimp-drawable-height given-layer)))
+         (random-y (random height)))
+    random-y))
+
+
+(define (choose-random-piece-height absolute-source-piece-limits)
+  (let* ((min-source-piece-height
+          (cadr (assoc 'min-source-piece-height absolute-source-piece-limits)))
+         (max-source-piece-height
+          (cadr (assoc 'max-source-piece-height absolute-source-piece-limits)))
+         (difference
+          (+ 1 (- max-source-piece-height min-source-piece-height)))
+         (random-height
+          (+ (- min-source-piece-height 1) (random difference))))
+    random-height))
+
+
+(define (choose-random-piece-width absolute-source-piece-limits)
+  (let* ((min-source-piece-width
+          (cadr (assoc 'min-source-piece-width absolute-source-piece-limits)))
+         (max-source-piece-width
+          (cadr (assoc 'max-source-piece-width absolute-source-piece-limits)))
+         (difference
+          (+ 1 (- max-source-piece-width min-source-piece-width)))
+         (random-width
+          (+ (- min-source-piece-width 1) (random difference))))
+    random-width))
+
+
+(define (copy-random-piece-from-source
+         given-image
+         source-layer
+         absolute-source-piece-limits)
+  (gimp-image-set-active-layer given-image source-layer)
+  (let* ((random-piece-height
+          (choose-random-piece-height absolute-source-piece-limits))
+         (random-piece-width
+          (choose-random-piece-width absolute-source-piece-limits))
+         (random-x-on-source-layer
+          (choose-random-x-on-layer
+           source-layer))
+         (random-y-on-source-layer
+          (choose-random-y-on-layer
+           source-layer))
+         (ignored
+          (gimp-image-select-rectangle
+           given-image
+           CHANNEL-OP-SUBTRACT
+           random-x-on-source-layer
+           random-y-on-source-layer
+           random-piece-width
+           random-piece-height))
+         (random-piece-from-source
+          (car (gimp-edit-named-copy
+                source-layer
+                "random-collage random piece from source"))))
+    random-piece-from-source))
+
+
 (define (create-collage-layer given-image given-layer)
   ; Clear the selection, so we can make the collage layer transparent later
   (gimp-selection-none given-image)
@@ -55,7 +121,8 @@
      collage-layer
      collage-layer-parent
      collage-layer-position)
-    (gimp-drawable-edit-clear collage-layer)))
+    (gimp-drawable-edit-clear collage-layer)
+    collage-layer))
 
 
 (define (create-new-source-layer-from-clipboard given-image)
@@ -90,9 +157,9 @@
          (min-source-piece-width
           (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
          (max-source-piece-height
-          (trunc (round (* source-layer-height (/ min-source-piece-height-as-percentage 100)))))
+          (trunc (round (* source-layer-height (/ max-source-piece-height-as-percentage 100)))))
          (max-source-piece-width
-          (trunc (round (* source-layer-width  (/ min-source-piece-width-as-percentage  100)))))
+          (trunc (round (* source-layer-width  (/ max-source-piece-width-as-percentage  100)))))
          (absolute-source-piece-limits `((min-source-piece-height ,min-source-piece-height)
                                          (min-source-piece-width  ,min-source-piece-width)
                                          (max-source-piece-height ,max-source-piece-height)
@@ -116,12 +183,57 @@
          max-source-piece-height-as-percentage
          max-source-piece-width-as-percentage)
   `((min-source-piece-height-as-percentage ,min-source-piece-height-as-percentage)
-    (min-source-piece-width-as-percentage ,min-source-piece-width-as-percentage)
+    (min-source-piece-width-as-percentage  ,min-source-piece-width-as-percentage)
     (max-source-piece-height-as-percentage ,max-source-piece-height-as-percentage)
-    (max-source-piece-width-as-percentage ,max-source-piece-width-as-percentage)))
+    (max-source-piece-width-as-percentage  ,max-source-piece-width-as-percentage)))
+
+
+(define get-type
+  (lambda (x)
+    (cond
+     ((null? x) "null")
+     ((char? x) "char")
+     ((list? x) "list")
+     ((number? x) "number")
+     ((pair? x) "pair")
+     ((string? x) "string")
+     ((symbol? x) "symbol")
+     ((vector? x) "vector")
+     (#t "unknown type"))))
+
+
+(define (randomly-place-piece image layer piece)
+  (let* ((random-x-on-layer
+          (choose-random-x-on-layer layer))
+         (random-y-on-layer
+          (choose-random-y-on-layer layer))
+         (piece-height
+          (car (gimp-buffer-get-height piece)))
+         (piece-width
+          (car (gimp-buffer-get-width piece)))
+         (ignored
+          (gimp-image-select-rectangle
+           image
+           CHANNEL-OP-REPLACE
+           random-x-on-layer
+           random-y-on-layer
+           piece-width
+           piece-height))
+         (paste-name
+          (gimp-edit-named-paste
+           layer
+           piece
+           TRUE))
+         (active-drawable
+          (car
+           (gimp-image-get-active-drawable image))))
+    (gimp-floating-sel-anchor active-drawable)))
 
 
 ; Place pieces randomly on to the collage layer
+;
+; This function merely gets the source layer and absolute source-piece-limits
+; then hands off to randomly-place-pieces-aux, which does the real work
 (define (randomly-place-pieces
          given-image
          given-layer
@@ -135,7 +247,34 @@
           (get-absolute-source-piece-limits
            given-image
            source-layer
-           source-piece-limits-as-percentages)))))
+           source-piece-limits-as-percentages)))
+    (randomly-place-pieces-aux
+     given-image
+     collage-layer
+     source-layer
+     num-pieces
+     absolute-source-piece-limits)))
+
+
+; The real work of getting and placing pieces is done here
+(define (randomly-place-pieces-aux
+         given-image
+         collage-layer
+         source-layer
+         num-pieces
+         absolute-source-piece-limits)
+  (let loop ((i 0))
+    (if (< i num-pieces)
+        (let ((random-piece-copied-from-source
+               (copy-random-piece-from-source
+                given-image
+                source-layer
+                absolute-source-piece-limits)))
+          (randomly-place-piece
+           given-image
+           collage-layer
+           random-piece-copied-from-source)
+          (loop (+ i 1))))))
 
 
 ; Main entry point in to the script
@@ -149,6 +288,14 @@
          min-source-piece-width-as-percentage
          max-source-piece-height-as-percentage
          max-source-piece-width-as-percentage)
+  ; Sanity check the heights and widths chosen by the user
+  (cond
+   ((<= max-source-piece-height-as-percentage min-source-piece-height-as-percentage)
+    (gimp-message "Error: Max source piece height is not greater than min source piece height.")
+    (quit))
+   ((<= max-source-piece-width-as-percentage min-source-piece-width-as-percentage)
+    (gimp-message "Error: Max source piece width is not greater than min source piece width.")
+    (quit)))
   (gimp-image-undo-group-start given-image)
   (let* ((old-selection (car (gimp-selection-save given-image)))
          ; Create an alist of limits, for convenience in passing around all over the place
@@ -185,8 +332,8 @@
                     SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece height as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece width as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Max source piece height as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Max source piece width as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER))
+                    SF-ADJUSTMENT "Max source piece height as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Max source piece width as percentage of source image" '(20 1 100 1 10 0 SF-SPINNER))
 
 
 (script-fu-menu-register "script-fu-random-collage" "<Image>/Filters/Artistic")
