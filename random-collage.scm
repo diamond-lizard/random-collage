@@ -437,7 +437,7 @@
                     SF-TOGGLE "Rotate?" TRUE
                     SF-TOGGLE "Resize?" TRUE
                     SF-ADJUSTMENT "Min resize (Must be < Max resize)" '(0.5 0.1 2 0.1 0.5 1 SF-SPINNER)
-                    SF-ADJUSTMENT "Max resize (Must be > Min resize)" '(2 0.1 2 0.1 0.5 1 SF-SPINNER)
+                    SF-ADJUSTMENT "Max resize (Must be > Min resize)" '(2 0.1 100 0.1 1 1 SF-SPINNER)
                     SF-TOGGLE "Shear?" TRUE
                     SF-ADJUSTMENT "Min shear (Must be < Max shear)" '(1 1 1000 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max shear (Must be > Min shear)" '(200 1 1000 1 10 0 SF-SPINNER))
