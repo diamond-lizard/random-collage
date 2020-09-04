@@ -427,7 +427,7 @@
                     SF-ADJUSTMENT "Min source piece height % (Must be < Max height %)" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece height % (Must be > Min height %)" '(20 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece width % (Must be < Max width %)" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Max source piece width % (Must be > than Min height %)" '(20 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Max source piece width % (Must be > Min height %)" '(20 1 100 1 10 0 SF-SPINNER)
                     SF-TOGGLE "Rotate?" TRUE
                     SF-TOGGLE "Resize?" TRUE
                     SF-ADJUSTMENT "Min resize (Must be < Max resize)" '(0.5 0.1 2 0.1 0.5 1 SF-SPINNER)
