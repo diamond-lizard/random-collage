@@ -125,15 +125,6 @@
     collage-layer))
 
 
-(define (create-new-source-layer-from-clipboard given-image)
-  (let* ((active-drawable (car (gimp-image-get-active-drawable given-image)))
-         (floating-selection (car (gimp-edit-paste active-drawable FALSE)))
-         (ignored (gimp-floating-sel-to-layer floating-selection))
-         (source-layer (car (gimp-image-active-drawable given-image))))
-    (gimp-item-set-name source-layer "Random Collage source layer")
-    source-layer))
-
-
 ; Convert min and max source piece limits from percentages of source layer
 ; to absolute values in pixels based on the actual size of the source layer
 ;
@@ -165,15 +156,6 @@
                                          (max-source-piece-height ,max-source-piece-height)
                                          (max-source-piece-width  ,max-source-piece-width))))
     absolute-source-piece-limits))
-
-
-; Determine whether to use the active layer or the contents of the clipboard
-; as a source
-(define (get-source-layer source given-image given-layer)
-  (cond
-   ((equal? source 0) given-layer)
-   ((equal? source 1) (create-new-source-layer-from-clipboard
-                       given-image))))
 
 
 ; Pack source-piece-limits-as-percentages in to an alist, for ease of passing around later
@@ -287,16 +269,14 @@
          given-image
          given-layer
          collage-layer
-         source
+         source-layer
          num-pieces
          source-piece-limits-as-percentages
          rotate
          resize
          min-resize
          max-resize)
-  (let* ((source-layer
-          (get-source-layer source given-image given-layer))
-         (absolute-source-piece-limits
+  (let* ((absolute-source-piece-limits
           (get-absolute-source-piece-limits
            given-image
            source-layer
@@ -347,7 +327,6 @@
 (define (script-fu-random-collage
          given-image
          given-layer
-         source
          num-pieces
          min-source-piece-height-as-percentage
          min-source-piece-width-as-percentage
@@ -383,7 +362,7 @@
      given-image
      given-layer
      collage-layer
-     source
+     given-layer
      num-pieces
      source-piece-limits-as-percentages
      rotate
@@ -405,7 +384,6 @@
                     ""
                     SF-IMAGE "Image" 0
                     SF-DRAWABLE "Layer" 0
-                    SF-OPTION "Source" '("Active layer" "Clipboard")
                     SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece height as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece width as percentage of source image" '(10 1 100 1 10 0 SF-SPINNER)
