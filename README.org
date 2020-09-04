@@ -67,6 +67,9 @@ This is a limitation of the ScriptFu GUI.
 This is a limitation of the ScriptFu GUI.
 *** There no live preview.
 ScriptFu just does not allow scripts to have live preview.
+** FAQ
+*** Why is the Random Collage script grayed out in the Artistic Filters menu?
+Your image is probably not open in RGB mode.  Convert it to RGB using Image -> Mode -> RGB
 ** Issues and bugs
 Report bugs here:  https://github.com/diamond-lizard/random-collage/issues
 ** LICENSE
