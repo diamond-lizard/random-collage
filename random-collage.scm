@@ -220,9 +220,9 @@
           (car
            (gimp-image-get-active-drawable image)))
          (center-x
-          (trunc (round (/ piece-width 2))))
+          (+ (trunc (round (/ piece-width 2))) random-x-on-layer))
          (center-y
-          (trunc (round (/ piece-height 2))))
+          (+ (trunc (round (/ piece-height 2))) random-y-on-layer))
          (active-drawable
           (if resize
                                         ; We need to scale up the min and max resize values
@@ -252,14 +252,20 @@
                       center-y)))
               active-drawable)))
     (if rotate
-        (let* ((piece-height
+        (let* ((offsets
+                (gimp-drawable-offsets active-drawable))
+               (offset-x
+                (car offsets))
+               (offset-y
+                (cadr offsets))
+               (piece-height
                 (car (gimp-drawable-height active-drawable)))
                (piece-width
                 (car (gimp-drawable-width active-drawable)))
                (center-x
-                (trunc (round (/ piece-width 2))))
+                (+ offset-x (trunc (round (/ piece-width 2)))))
                (center-y
-                (trunc (round (/ piece-height 2))))
+                (+ offset-y (trunc (round (/ piece-height 2)))))
                (max-rotation-angle 359)
                (rotation-angle (random max-rotation-angle)))
           (gimp-item-transform-rotate
