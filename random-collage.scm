@@ -223,7 +223,7 @@
           (gimp-edit-named-paste
            layer
            piece
-           TRUE))
+           FALSE))
          (active-drawable
           (car
            (gimp-image-get-active-drawable image))))
