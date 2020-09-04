@@ -4,7 +4,7 @@ This script will place randomly distorted portions of the active layer on to a n
 
 Based on user-configurable parameters, the script will change the portions it copies in various ways, such as rotating, growing, shrinking, and shearing them before placing them on to the collage layer.
 
-The active layer will be unaffected.
+The active layer will be unaffected if the script is in "copy" mode.  If the script is in "cut" mode, pieces will be cut out of the active layer instead.
 ** Installation
 *** 1
 Copy the "random-collage.scm" file to $XDG_CONFIG_HOME/GIMP/2.10/scripts or an alternate location (chosen via Preferences -> Folders -> Scripts)
@@ -20,6 +20,8 @@ Note: This may take a while.  The more pieces and transformations, the longer it
 ** User-configurable parameters
 NOTE:  It is up to YOU to make sure the minimum amounts are smaller than the maximum amounts!
 This is due to a limitation of ScriptFu, which does not let the script do sanity checks on user inputs before the script dialog closes.
+*** Copy or Cut?
+Whether to copy our cut pieces out of the active layer.
 *** Number of pieces
 How many pieces of the active layer will be copied to the collage layer
 *** Min source piece height %

@@ -7,7 +7,8 @@
 ; it copies in various ways, such as rotating, growing, shrinking, and shearing
 ; them before placing them on to the new layer.
 ;
-; The original layer will be unaffected.
+; The active layer will be unaffected if the script is in "copy" mode.
+; If the script is in "cut" mode, pieces will be cut out of the active layer instead.
 ;
 ; ===========================================================================
 ;
@@ -67,8 +68,9 @@
     random-width))
 
 
-(define (copy-random-piece-from-source
+(define (get-random-piece-from-source
          given-image
+         copy-or-cut
          source-layer
          absolute-source-piece-limits)
   (gimp-image-set-active-layer given-image source-layer)
@@ -91,9 +93,15 @@
            random-piece-width
            random-piece-height))
          (random-piece-from-source
-          (car (gimp-edit-named-copy
-                source-layer
-                "random-collage random piece from source"))))
+          (cond
+           ((equal? copy-or-cut 0)
+            (car (gimp-edit-named-copy
+                  source-layer
+                  "random-collage random piece from source")))
+           ((equal? copy-or-cut 1)
+            (car (gimp-edit-named-cut
+                  source-layer
+                  "random-collage random piece from source"))))))
     random-piece-from-source))
 
 
@@ -295,6 +303,7 @@
 (define (randomly-place-pieces
          given-image
          given-layer
+         copy-or-cut
          collage-layer
          source-layer
          num-pieces
@@ -313,6 +322,7 @@
            source-piece-limits-as-percentages)))
     (randomly-place-pieces-aux
      given-image
+     copy-or-cut
      collage-layer
      source-layer
      num-pieces
@@ -329,6 +339,7 @@
 ; The real work of getting and placing pieces is done here
 (define (randomly-place-pieces-aux
          given-image
+         copy-or-cut
          collage-layer
          source-layer
          num-pieces
@@ -342,15 +353,16 @@
          max-shear)
   (let loop ((i 0))
     (if (< i num-pieces)
-        (let ((random-piece-copied-from-source
-               (copy-random-piece-from-source
+        (let ((random-piece-from-source
+               (get-random-piece-from-source
                 given-image
+                copy-or-cut
                 source-layer
                 absolute-source-piece-limits)))
           (randomly-place-piece
            given-image
            collage-layer
-           random-piece-copied-from-source
+           random-piece-from-source
            rotate
            resize
            min-resize
@@ -366,6 +378,7 @@
 (define (script-fu-random-collage
          given-image
          given-layer
+         copy-or-cut
          num-pieces
          min-source-piece-height-as-percentage
          max-source-piece-height-as-percentage
@@ -403,6 +416,7 @@
     (randomly-place-pieces
      given-image
      given-layer
+     copy-or-cut
      collage-layer
      given-layer
      num-pieces
@@ -429,6 +443,7 @@
                     "RGB, RGBA"
                     SF-IMAGE "Image" 0
                     SF-DRAWABLE "Layer" 0
+                    SF-OPTION "Copy or Cut?" '("Copy" "Cut")
                     SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece height % (Must be < Max height %)" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece height % (Must be > Min height %)" '(20 1 100 1 10 0 SF-SPINNER)
