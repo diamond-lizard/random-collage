@@ -329,8 +329,8 @@
          given-layer
          num-pieces
          min-source-piece-height-as-percentage
-         min-source-piece-width-as-percentage
          max-source-piece-height-as-percentage
+         min-source-piece-width-as-percentage
          max-source-piece-width-as-percentage
          rotate
          resize
@@ -386,8 +386,8 @@
                     SF-DRAWABLE "Layer" 0
                     SF-ADJUSTMENT "Number of pieces" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Min source piece height % (Must be LESS than Max height %)" '(10 1 100 1 10 0 SF-SPINNER)
-                    SF-ADJUSTMENT "Min source piece width % (Must be LESS than Max width %)" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece height % (Must be GREATER THAN than Max height %)" '(20 1 100 1 10 0 SF-SPINNER)
+                    SF-ADJUSTMENT "Min source piece width % (Must be LESS than Max width %)" '(10 1 100 1 10 0 SF-SPINNER)
                     SF-ADJUSTMENT "Max source piece width % (Must be GREATER THAN than Max height %)" '(20 1 100 1 10 0 SF-SPINNER)
                     SF-TOGGLE "Rotate?" TRUE
                     SF-TOGGLE "Resize?" TRUE
